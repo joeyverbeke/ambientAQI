@@ -4,11 +4,12 @@ READ_API_KEY='OZUQH57IOWW840PA'
 CHANNEL_ID='1103672'
 
 import opc, time
-numLEDs = 8
+numLEDs = 16
+
 client = opc.Client('localhost:7890')
 
 good_low = 		[ (0,255,0) ]  		#AQI 0-24
-good_high = 	[ (127,255,0) ] 	#AQI 25-50
+good_high = 	good_low #[ (127,255,0) ] 	#AQI 25-50
 moderate_low = 	[ (255,255,0) ] 	#AQI 51-75
 moderate_high = [ (255,200,0) ] 	#AQI 76-100
 UFSI_low = 		[ (255,127,0) ] 	#AQI 101-125
@@ -47,4 +48,4 @@ while True:
     	pixels = ledColor * numLEDs
     	client.put_pixels(pixels)
 
-    time.sleep(30)
+    time.sleep(60)
