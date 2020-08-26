@@ -38,7 +38,7 @@ while True:
     elif pm <= 55:  #unhealthy for sensitive individuals
     	ledColor = [ (255, 127 - int((pm - 35) * 6.35), 0) ]
     elif pm <= 150: #unhealthy
-        ledColor = [ (255, 0, int((pm - 55) * 2.68) ]
+        ledColor = [ (255, 0, int((pm - 55) * 2.68)) ]
     else:           #very unhealthy
         ledColor = [ ( 255, 0, 255) ]
 
