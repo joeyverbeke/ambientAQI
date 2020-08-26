@@ -9,7 +9,7 @@ numLEDs = 16
 client = opc.Client('localhost:7890')
 
 good_low = 		[ (0,255,0) ]  		#AQI 0-24
-good_high = 	good_low #[ (127,255,0) ] 	#AQI 25-50
+good_high = 	[ (127,255,0) ] 	#AQI 25-50
 moderate_low = 	[ (255,255,0) ] 	#AQI 51-75
 moderate_high = [ (255,200,0) ] 	#AQI 76-100
 UFSI_low = 		[ (255,127,0) ] 	#AQI 101-125
@@ -31,18 +31,16 @@ while True:
 
     pm = float(data['field8'])
 
-    if pm < 6:
-    	ledColor = good_low
-    elif pm >= 6 and pm < 12:
-    	ledColor = good_high
-    elif pm >= 12 and pm < 23.5:
-    	ledColor = moderate_low
-    elif pm >= 23.5 and pm < 35:
-    	ledColor = moderate_high
-    elif pm >= 35 and pm < 45:
-    	ledColor = UFSI_low
-    elif pm >= 45 and pm < 55:
-    	ledColor = UFSI_high
+    if pm <= 12:    #good
+        ledColor = [ (int(pm * 21), 255, 0) ]
+    elif pm <= 35:  #moderate
+    	ledColor = [ (255, 255 - int((pm - 12) * 5.65), 0) ]
+    elif pm <= 55:  #unhealthy for sensitive individuals
+    	ledColor = [ (255, 127 - int((pm - 35) * 6.35), 0) ]
+    elif pm <= 150: #unhealthy
+        ledColor = [ (255, 0, int((pm - 55) * 2.68) ]
+    else:           #very unhealthy
+        ledColor = [ ( 255, 0, 255) ]
 
     for i in range(numLEDs):
     	pixels = ledColor * numLEDs
