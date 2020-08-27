@@ -37,7 +37,7 @@ while True:
         brightness = 0.5
     elif time.strftime("%H", time.localtime()) > 1 and time.strftime("%H", time.localtime()) < 8:
         brightness = 0
-    else
+    else:
         brightness = 1
 
     if pm <= 12:    #good
