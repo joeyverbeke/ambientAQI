@@ -19,6 +19,8 @@ unhealthy = 	[ (255,0,0) ] 		#AQI 151+
 pm = 0
 ledColor = good_low
 
+brightness = 1
+
 while True:
     conn = urllib2.urlopen("http://api.thingspeak.com/channels/%s/feeds/last.json?api_key=%s" \
                            % (CHANNEL_ID,READ_API_KEY))
@@ -31,16 +33,23 @@ while True:
 
     pm = float(data['field8'])
 
+    if time.strftime("%H", time.localtime()) >= 22 or time.strftime("%H", time.localtime()) < 1:
+        brightness = 0.5
+    elif time.strftime("%H", time.localtime()) > 1 and time.strftime("%H", time.localtime()) < 8:
+        brightness = 0
+    else
+        brightness = 1
+
     if pm <= 12:    #good
-        ledColor = [ (int(pm * 21), 255, 0) ]
+        ledColor = [ (int(pm * 21 * brightness), int(255 * brightness), 0) ]
     elif pm <= 35:  #moderate
-    	ledColor = [ (255, 255 - int((pm - 12) * 5.65), 0) ]
+    	ledColor = [ (int(255 * brightness), int( (255 - int((pm - 12) * 5.65)) * brightness ), 0) ]
     elif pm <= 55:  #unhealthy for sensitive individuals
-    	ledColor = [ (255, 127 - int((pm - 35) * 6.35), 0) ]
+    	ledColor = [ (int(255 * brightness), int( (127 - int((pm - 35) * 6.35)) * brightness ), 0) ]
     elif pm <= 150: #unhealthy
-        ledColor = [ (255, 0, int((pm - 55) * 2.68)) ]
+        ledColor = [ (int(255 * brightness), 0, int((pm - 55) * 2.68 * brightness)) ]
     else:           #very unhealthy
-        ledColor = [ ( 255, 0, 255) ]
+        ledColor = [ (int(255 * brightness), 0, int(255 * brightness)) ]
 
     for i in range(numLEDs):
     	pixels = ledColor * numLEDs
